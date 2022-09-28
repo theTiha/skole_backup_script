@@ -1,6 +1,7 @@
 # skole_backup_script
 Backup script to H4
 """ WORK IN PROGRESS """
+
 Description:
 Simple full filesystem backups are done through the main.py script. Backups are created from a CSV file that is located in the repository. The backup script ONLY works on the host there it's located, and is designed to work automatically with the help of a cronjob or Windows Task Scheduler. 
 
