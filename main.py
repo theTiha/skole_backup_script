@@ -1,6 +1,8 @@
 import datetime
 import os
 import csv
+import operator
+import art
 from distutils.dir_util import copy_tree
 from distutils.file_util import copy_file
 
@@ -68,12 +70,43 @@ def backup_function(main_path, full_path_to_bak, customer):
             log_list.append(date_format(1) + file_name)
 
 
-path_to_folder1 = csv_read()
-print(path_to_folder1)
+def differ_backup_now(full_path_to_latest):
+    # print(full_path_to_latest)
+    print(os.listdir(full_path_to_latest))
 
-for row in path_to_folder1:
-    full_path_weekly = os.path.join(path_to_backup_folder, row[0], var[0], "")
-    check_existing_dir(row[0])
-    backup_function(customer=row[0], full_path_to_bak=full_path_weekly, main_path=row[1])
-    create_log()
-# print(log_list)
+
+def differ_backup_check(diff_full_path_to_bak):
+    empty_dic = {}
+    for dir in os.listdir(diff_full_path_to_bak):
+        jojo = os.path.join(diff_full_path_to_bak, "", dir)
+        create_time = os.path.getctime(jojo)
+        empty_dic[dir] = create_time
+    print(f"emp_dic {empty_dic}")
+    sort_list = sorted(empty_dic.items(), key=operator.itemgetter(1), reverse=False)
+    latest_backup_folder = os.path.join(diff_full_path_to_bak, "", sort_list[-1][0])
+    differ_backup_now(latest_backup_folder)
+
+
+path_to_folder1 = csv_read()
+print(f" Path to folder {path_to_folder1}")
+print(art.logo)
+while True:
+    try:
+        users_input = int(input(f'\nPlease Select: \n[1]Full Backup \n[2]Differential Backup \n[3]Exit \n'))
+    except ValueError:
+        print("Wrong input... Try using the numbers 1 or 2")
+
+    if users_input == 1:
+        for row in path_to_folder1:
+            full_path_weekly = os.path.join(path_to_backup_folder, row[0], var[0], "")
+            check_existing_dir(row[0])
+            backup_function(customer=row[0], full_path_to_bak=full_path_weekly, main_path=row[1])
+            create_log()
+    elif users_input == 2:
+        for diff_row in path_to_folder1:
+            full_path_dir1 = os.path.join(path_to_backup_folder, diff_row[0], var[0], "")
+            differ_backup_check(diff_full_path_to_bak=full_path_dir1)
+    elif users_input < 0 or users_input > 3:
+        print("Come on dude! TrY UsInG ThE NuMbErs 1 Or 2")
+    else:
+        break
