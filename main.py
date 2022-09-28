@@ -95,18 +95,22 @@ while True:
         users_input = int(input(f'\nPlease Select: \n[1]Full Backup \n[2]Differential Backup \n[3]Exit \n'))
     except ValueError:
         print("Wrong input... Try using the numbers 1 or 2")
+        continue
 
     if users_input == 1:
+        # Full Backup
         for row in path_to_folder1:
             full_path_weekly = os.path.join(path_to_backup_folder, row[0], var[0], "")
             check_existing_dir(row[0])
             backup_function(customer=row[0], full_path_to_bak=full_path_weekly, main_path=row[1])
             create_log()
     elif users_input == 2:
+        # Differential Backup
         for diff_row in path_to_folder1:
             full_path_dir1 = os.path.join(path_to_backup_folder, diff_row[0], var[0], "")
             differ_backup_check(diff_full_path_to_bak=full_path_dir1)
     elif users_input < 0 or users_input > 3:
         print("Come on dude! TrY UsInG ThE NuMbErs 1 Or 2")
     else:
+        print("Goodbye!")
         break
